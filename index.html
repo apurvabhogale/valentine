@@ -1,41 +1,109 @@
-<script>
-function yesClicked() {
-  document.body.innerHTML = "<h1>YAY!!! 💘</h1>";
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #ffe6f0;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+    }
 
-const noButton = document.getElementById("no");
-const boo = document.getElementById("booSound");
+    h1 {
+      font-size: 48px;
+      color: #d6336c;
+      text-align: center;
+      margin-top: 50px;
+      position: relative;
+      z-index: 1;
+    }
 
-let direction = 1;
-const speed = 1; // slower crawl
-const minTop = window.innerHeight * 0.5;
+    button {
+      font-size: 24px;
+      padding: 15px 40px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      z-index: 1000;
+    }
 
-// fix vertical position
-noButton.style.top = minTop + "px";
+    #yes {
+      background-color: #ff4d6d;
+      color: white;
+      top: 200px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
 
-// Crawl horizontally
-function crawlNo() {
-  let left = noButton.offsetLeft + speed * direction;
-  const maxRight = window.innerWidth - noButton.offsetWidth;
+    #no {
+      background-color: #999;
+      color: white;
+      top: 60%;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
 
-  if (left >= maxRight) direction = -1;
-  if (left <= 0) direction = 1;
+  <h1>Will You Be My Valentine? 💖</h1>
 
-  noButton.style.left = left + "px";
-  requestAnimationFrame(crawlNo);
-}
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
 
-crawlNo();
+  <audio id="booSound">
+    <source src="boo.wav" type="audio/wav">
+  </audio>
 
-// Play BOO sound on hover
-noButton.addEventListener("mouseover", () => {
-  boo.currentTime = 0;
-  boo.play();
-});
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const yesButton = document.getElementById("yes");
+      const noButton = document.getElementById("no");
+      const boo = document.getElementById("booSound");
 
-// Handle NO click
-noButton.addEventListener("click", () => {
-  alert("You tried… 😱"); // you can change this to any message
-});
-</script>
+      yesButton.addEventListener("click", () => {
+        document.body.innerHTML = "<h1>YAY!!! 💘</h1>";
+      });
+
+      let direction = 1;
+      const speed = 1;
+      const minTop = window.innerHeight * 0.5;
+      noButton.style.top = minTop + "px";
+
+      function crawlNo() {
+        let left = noButton.offsetLeft + speed * direction;
+        const maxRight = window.innerWidth - noButton.offsetWidth;
+        if (left >= maxRight) direction = -1;
+        if (left <= 0) direction = 1;
+        noButton.style.left = left + "px";
+        requestAnimationFrame(crawlNo);
+      }
+
+      crawlNo();
+
+      noButton.addEventListener("mouseover", () => {
+        boo.currentTime = 0;
+        boo.play().catch(() => {
+          document.body.addEventListener("click", () => {
+            boo.currentTime = 0;
+            boo.play();
+          }, { once: true });
+        });
+        setTimeout(() => {
+          boo.pause();
+        }, 3000);
+      });
+
+      noButton.addEventListener("click", () => {
+        alert("You tried… 😱");
+      });
+    });
+  </script>
+
+</body>
+</html>
 
