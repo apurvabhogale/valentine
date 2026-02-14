@@ -7,8 +7,8 @@
       font-family: 'Courier New', Courier, monospace;
       text-align: center;
       background-color: #ffe6f0;
-      margin-top: 100px;
-      overflow: hidden; /* keeps crawling button within view */
+      margin: 0;
+      overflow: hidden;
       position: relative;
       height: 100vh;
     }
@@ -16,28 +16,31 @@
     h1 {
       font-size: 48px;
       color: #d6336c;
+      margin-top: 50px;
     }
 
     button {
       font-size: 24px;
       padding: 15px 40px;
-      margin: 20px;
       border-radius: 10px;
       border: none;
       cursor: pointer;
-      position: relative;
+      position: absolute;
     }
 
     #yes {
       background-color: #ff4d6d;
       color: white;
+      position: relative;
+      top: 150px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     #no {
       background-color: #999;
       color: white;
-      position: absolute;
-      top: 200px;
+      top: 60%; /* lower half */
       left: 0;
     }
   </style>
@@ -49,33 +52,42 @@
   <button id="yes" onclick="yesClicked()">Yes</button>
   <button id="no">No</button>
 
+  <!-- Crowd BOO sound -->
+  <audio id="booSound">
+    <source src="boo.wav" type="audio/wav">
+  </audio>
+
   <script>
     function yesClicked() {
       document.body.innerHTML = "<h1>YAY!!! 💘</h1>";
     }
 
-    // Make the "No" button crawl smoothly across the screen
     const noButton = document.getElementById("no");
-    let direction = 1; // 1 = moving right, -1 = moving left
-    let speed = 2; // pixels per frame
+    const boo = document.getElementById("booSound");
+    let direction = 1;
+    const speed = 1;
+    const minTop = window.innerHeight * 0.5;
+
+    noButton.style.top = minTop + "px";
 
     function crawlNo() {
       let left = noButton.offsetLeft + speed * direction;
       const maxRight = window.innerWidth - noButton.offsetWidth;
 
-      if (left >= maxRight) {
-        direction = -1; // bounce left
-        left = maxRight;
-      } else if (left <= 0) {
-        direction = 1; // bounce right
-        left = 0;
-      }
+      if (left >= maxRight) direction = -1;
+      if (left <= 0) direction = 1;
 
       noButton.style.left = left + "px";
       requestAnimationFrame(crawlNo);
     }
 
     crawlNo();
+
+    // Play BOO sound whenever hovering
+    noButton.addEventListener("mouseover", () => {
+      boo.currentTime = 0;
+      boo.play();
+    });
   </script>
 
 </body>
