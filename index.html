@@ -1,99 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Will You Be My Valentine?</title>
-  <style>
-    body {
-      font-family: 'Courier New', Courier, monospace;
-      text-align: center;
-      background-color: #ffe6f0;
-      margin: 0;
-      overflow: hidden;
-      position: relative;
-      height: 100vh;
-    }
+<script>
+function yesClicked() {
+  document.body.innerHTML = "<h1>YAY!!! 💘</h1>";
+}
 
-    h1 {
-      font-size: 48px;
-      color: #d6336c;
-      margin-top: 50px;
-    }
+const noButton = document.getElementById("no");
+const boo = document.getElementById("booSound");
 
-    button {
-      font-size: 24px;
-      padding: 15px 40px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      position: absolute;
-    }
+let direction = 1;
+const speed = 1; // slower crawl
+const minTop = window.innerHeight * 0.5;
 
-    #yes {
-      background-color: #ff4d6d;
-      color: white;
-      /* Center horizontally and place near top */
-      top: 200px;
-      left: 50%;
-      transform: translateX(-50%);
-      position: absolute;
-      z-index: 10;
-    }
+// fix vertical position
+noButton.style.top = minTop + "px";
 
-    #no {
-      background-color: #999;
-      color: white;
-      top: 60%; /* Lower half */
-      left: 0;
-      z-index: 10;
-    }
-  </style>
-</head>
-<body>
+// Crawl horizontally
+function crawlNo() {
+  let left = noButton.offsetLeft + speed * direction;
+  const maxRight = window.innerWidth - noButton.offsetWidth;
 
-  <h1>Will You Be My Valentine? 💖</h1>
+  if (left >= maxRight) direction = -1;
+  if (left <= 0) direction = 1;
 
-  <button id="yes" onclick="yesClicked()">Yes</button>
-  <button id="no">No</button>
+  noButton.style.left = left + "px";
+  requestAnimationFrame(crawlNo);
+}
 
-  <audio id="booSound">
-    <source src="boo.wav" type="audio/wav">
-  </audio>
+crawlNo();
 
-  <script>
-    function yesClicked() {
-      document.body.innerHTML = "<h1>YAY!!! 💘</h1>";
-    }
+// Play BOO sound on hover
+noButton.addEventListener("mouseover", () => {
+  boo.currentTime = 0;
+  boo.play();
+});
 
-    const noButton = document.getElementById("no");
-    const boo = document.getElementById("booSound");
-
-    let direction = 1;
-    const speed = 1; // slower crawl
-    const minTop = window.innerHeight * 0.5; // lower half
-
-    // Ensure No button is in lower half
-    noButton.style.top = minTop + "px";
-
-    function crawlNo() {
-      let left = noButton.offsetLeft + speed * direction;
-      const maxRight = window.innerWidth - noButton.offsetWidth;
-
-      if (left >= maxRight) direction = -1;
-      if (left <= 0) direction = 1;
-
-      noButton.style.left = left + "px";
-      requestAnimationFrame(crawlNo);
-    }
-
-    crawlNo();
-
-    // Play BOO sound on hover
-    noButton.addEventListener("mouseover", () => {
-      boo.currentTime = 0;
-      boo.play();
-    });
-  </script>
-
-</body>
-</html>
+// Handle NO click
+noButton.addEventListener("click", () => {
+  alert("You tried… 😱"); // you can change this to any message
+});
+</script>
 
