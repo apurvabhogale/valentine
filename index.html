@@ -4,10 +4,13 @@
   <title>Will You Be My Valentine?</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Courier New', Courier, monospace;
       text-align: center;
       background-color: #ffe6f0;
       margin-top: 100px;
+      overflow: hidden; /* keeps crawling button within view */
+      position: relative;
+      height: 100vh;
     }
 
     h1 {
@@ -22,6 +25,7 @@
       border-radius: 10px;
       border: none;
       cursor: pointer;
+      position: relative;
     }
 
     #yes {
@@ -33,6 +37,8 @@
       background-color: #999;
       color: white;
       position: absolute;
+      top: 200px;
+      left: 0;
     }
   </style>
 </head>
@@ -41,18 +47,35 @@
   <h1>Will You Be My Valentine? 💖</h1>
 
   <button id="yes" onclick="yesClicked()">Yes</button>
-  <button id="no" onmouseover="moveNo()">No</button>
+  <button id="no">No</button>
 
   <script>
     function yesClicked() {
-      document.body.innerHTML = "<h1>YAY!!! 💘 </h1>";
+      document.body.innerHTML = "<h1>YAY!!! 💘</h1>";
     }
 
-    function moveNo() {
-      const button = document.getElementById("no");
-      button.style.top = Math.random() * window.innerHeight + "px";
-      button.style.left = Math.random() * window.innerWidth + "px";
+    // Make the "No" button crawl smoothly across the screen
+    const noButton = document.getElementById("no");
+    let direction = 1; // 1 = moving right, -1 = moving left
+    let speed = 2; // pixels per frame
+
+    function crawlNo() {
+      let left = noButton.offsetLeft + speed * direction;
+      const maxRight = window.innerWidth - noButton.offsetWidth;
+
+      if (left >= maxRight) {
+        direction = -1; // bounce left
+        left = maxRight;
+      } else if (left <= 0) {
+        direction = 1; // bounce right
+        left = 0;
+      }
+
+      noButton.style.left = left + "px";
+      requestAnimationFrame(crawlNo);
     }
+
+    crawlNo();
   </script>
 
 </body>
