@@ -31,17 +31,20 @@
     #yes {
       background-color: #ff4d6d;
       color: white;
-      position: relative;
-      top: 150px;
+      /* Center horizontally and place near top */
+      top: 200px;
       left: 50%;
       transform: translateX(-50%);
+      position: absolute;
+      z-index: 10;
     }
 
     #no {
       background-color: #999;
       color: white;
-      top: 60%; /* lower half */
+      top: 60%; /* Lower half */
       left: 0;
+      z-index: 10;
     }
   </style>
 </head>
@@ -52,7 +55,6 @@
   <button id="yes" onclick="yesClicked()">Yes</button>
   <button id="no">No</button>
 
-  <!-- Crowd BOO sound -->
   <audio id="booSound">
     <source src="boo.wav" type="audio/wav">
   </audio>
@@ -64,10 +66,12 @@
 
     const noButton = document.getElementById("no");
     const boo = document.getElementById("booSound");
-    let direction = 1;
-    const speed = 1;
-    const minTop = window.innerHeight * 0.5;
 
+    let direction = 1;
+    const speed = 1; // slower crawl
+    const minTop = window.innerHeight * 0.5; // lower half
+
+    // Ensure No button is in lower half
     noButton.style.top = minTop + "px";
 
     function crawlNo() {
@@ -83,7 +87,7 @@
 
     crawlNo();
 
-    // Play BOO sound whenever hovering
+    // Play BOO sound on hover
     noButton.addEventListener("mouseover", () => {
       boo.currentTime = 0;
       boo.play();
